@@ -1,3 +1,5 @@
+import throttle from 'lodash.throttle';
+
 const form = document.querySelector('form.feedback-form');
 const inputEmail = document.querySelector('label > input');
 const inputText = document.querySelector('label > textarea');
@@ -8,15 +10,16 @@ if (formDataString) {
   inputText.value = formDataString.message;
 }
 
-form.addEventListener('input', () => {
-  const data = {
-    email: inputEmail.value,
-    message: inputText.value,
-  };
-  localStorage.setItem('feedback-form-state', JSON.stringify(data));
-});
-
-
+form.addEventListener(
+  'input',
+  throttle(() => {
+    const data = {
+      email: inputEmail.value,
+      message: inputText.value,
+    };
+    localStorage.setItem('feedback-form-state', JSON.stringify(data));
+  }, 500)
+);
 
 form.addEventListener('submit', e => {
   e.preventDefault();
